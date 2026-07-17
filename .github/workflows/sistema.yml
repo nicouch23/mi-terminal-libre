@@ -10,19 +10,19 @@ jobs:
       - name: Descargar base
         uses: actions/checkout@v4
 
-      - name: Instalar Terminal Web y Cloudflared
+      - name: Instalar Terminal Web Ligera
         run: |
           sudo apt-get update
-          # Instalamos la terminal web ligera ttyd
           sudo apt-get install -y ttyd
-          # Descargamos el agente oficial de tuneles de Cloudflare
-          curl -L --output cloudflared.deb https://github.com
-          sudo dpkg -i cloudflared.deb
 
-      - name: Encender Terminal e Iniciar Tunel Camuflado
+      - name: Descargar y Ejecutar Tunel de Cloudflare
         run: |
-          # 1. Activamos la terminal en segundo plano en el puerto 8080
+          # 1. Activamos la terminal en segundo plano
           ttyd -p 8080 bash &
           
-          # 2. Creamos un tunel público instantaneo y camuflado de Cloudflare
-          cloudflared tunnel --url http://localhost:8080
+          # 2. Descargamos el ejecutable directo sin instaladores pesados
+          wget -q https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64
+          chmod +x cloudflared-linux-amd64
+          
+          # 3. Lanzamos el puente camuflado directo
+          ./cloudflared-linux-amd64 tunnel --url http://localhost:8080
