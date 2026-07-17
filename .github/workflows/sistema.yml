@@ -10,22 +10,22 @@ jobs:
       - name: Descargar base
         uses: actions/checkout@v4
 
-      - name: Instalar Terminal Nativa y Tunel Alternativo
+      - name: Instalar Terminal Nativa
         run: |
           sudo apt-get update
-          # 1. Instalar la terminal nativa del sistema operativo
           sudo apt-get install -y shellinabox
-          
-          # 2. Instalar el tunel ligero localtunnel mediante el gestor oficial npm
-          sudo npm install -g localtunnel
 
       - name: Encender Terminal e Iniciar Tunel Camuflado
         run: |
-          # 1. Detenemos el servicio automatico inicial para liberar el puerto
+          # 1. Detenemos el servicio automático inicial para liberar el puerto
           sudo systemctl stop shellinabox
           
           # 2. Encendemos la terminal limpia de forma libre en el puerto 8080
           sudo shellinaboxd -b -p 8080 --disable-ssl --localhost-only
           
-          # 3. Lanzamos el puente publico directo apuntando a nuestro puerto
-          lt --port 8080
+          # 3. Descargamos el binario portátil de Cloudflare (No es .deb, no falla)
+          wget -q https://github.com
+          chmod +x cloudflared-linux-amd64
+          
+          # 4. Lanzamos el puente invisible directo de Cloudflare apuntando al puerto correcto
+          ./cloudflared-linux-amd64 tunnel --url http://localhost:8080
