@@ -20,7 +20,7 @@ jobs:
           echo "deb https://amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list
           sudo apt-get update && sudo apt-get install ngrok
           # AQUÍ PEGAS TU TOKEN (Reemplaza lo que está entre comillas)
-          ngrok config add-authtoken "TU_TOKEN_DE_NGROK_AQUI"
+          ngrok config add-authtoken "3GdTIs00VgcIfGnbE6ZJWFaDA20_83bVmk3GokATd5YyWpkiS"
           
       - name: Abrir Enlace Libre Permanente
         run: |
