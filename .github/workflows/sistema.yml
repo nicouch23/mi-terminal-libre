@@ -10,19 +10,12 @@ jobs:
       - name: Descargar base del repositorio
         uses: actions/checkout@v4
 
-      - name: Instalar Entorno Grafico, Google Chrome y Sistema de Audio
+      - name: Instalar Entorno Grafico, Navegador y Sistema de Audio
         run: |
           sudo apt-get update
           
-          # 1. Instalar dependencias del escritorio ligero, servidor de video Xvfb y Audio
-          sudo apt-get install -y xfce4 xfce4-goodies xvfb x11vnc fluxbox pulseaudio pavucontrol
-          
-          # 2. Instalar el emulador de pantalla web noVNC (Nativo en puerto 6080)
-          sudo apt-get install -y novnc websockify
-          
-          # 3. Descargar e instalar Google Chrome Estable Oficial
-          wget -q https://google.com
-          sudo apt-get install -y ./google-chrome-stable_current_amd64.deb
+          # Instalar dependencias del escritorio ligero, servidor de video Xvfb, Audio y el Navegador Oficial Chromium
+          sudo apt-get install -y xfce4 xfce4-goodies xvfb x11vnc fluxbox pulseaudio pavucontrol novnc websockify chromium-browser
 
       - name: Encender Motores, Audio e Iniciar Tunel Camuflado Cloudflare
         run: |
@@ -43,7 +36,7 @@ jobs:
           sleep 5
           
           # E. Descargar el binario seguro de Cloudflare (Formato robusto, nunca falla)
-          wget -q https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64
+          wget -q https://github.com
           chmod +x cloudflared-linux-amd64
           
           # F. Abrir el tunel invisible apuntando a la pantalla interactiva
