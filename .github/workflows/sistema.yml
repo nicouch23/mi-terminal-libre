@@ -12,13 +12,13 @@ jobs:
 
       - name: Encender Navegador con Audio e Iniciar Tunel Camuflado
         run: |
-          # 1. Encendemos un navegador de alta velocidad (Kasm Web Chromium) con Audio integrado en solo 3 segundos
-          docker run -d --name navegador -p 8080:6901 --shm-size=512m -e VNC_PW=password kasmweb/chromium:1.15.0
+          # 1. Encendemos el contenedor con el tag universal optimizado para servidores en la nube
+          docker run -d --name navegador -p 8080:6901 --shm-size=512m -e VNC_PW=password kasmweb/chromium:1.15.0-rolling
           sleep 5
           
-          # 2. Descargamos la herramienta de Cloudflare directamente
-          wget -q https://github.com
-          chmod +x cloudflared-linux-amd64
+          # 2. Descargamos Cloudflare usando su canal principal de alta velocidad
+          curl -L -o cloudflared https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64
+          chmod +x cloudflared
           
           # 3. Lanzamos el puente invisible directo hacia el navegador con audio
-          ./cloudflared-linux-amd64 tunnel --url http://localhost:8080
+          ./cloudflared tunnel --url http://localhost:8080
