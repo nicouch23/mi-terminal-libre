@@ -7,21 +7,23 @@ jobs:
   run-ssh:
     runs-on: ubuntu-latest
     steps:
-      - name: Instalar Terminal Web Integrada
+      - name: Descargar base
+        uses: actions/checkout@v4
+
+      - name: Instalar ngrok y ttyd
         run: |
-          sudo apt-get update
-          sudo apt-get install -y ttyd
-          # Arrancamos la terminal web en el puerto 7681
-          ttyd -p 7681 bash &
-          
-      - name: Instalar y Configurar Tunel ngrok
+          # Instalación limpia de la base de ngrok
+          curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null
+          echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list
+          sudo apt-get update && sudo apt-get install -y ngrok ttyd
+
+      - name: Configurar e Iniciar Conexion Cifrada
         run: |
-          curl -s https://amazonaws.com | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null
-          echo "deb https://amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list
-          sudo apt-get update && sudo apt-get install ngrok
-          # AQUÍ PEGAS TU TOKEN (Reemplaza lo que está entre comillas)
+          # 1. Registramos tu token de ngrok de forma autoritaria
           ngrok config add-authtoken "3GdTIs00VgcIfGnbE6ZJWFaDA20_83bVmk3GokATd5YyWpkiS"
           
-      - name: Abrir Enlace Libre Permanente
-        run: |
+          # 2. Encendemos la interfaz visual de fondo
+          ttyd -p 7681 bash &
+          
+          # 3. Lanzamos el puente web directo a los servidores de ngrok
           ngrok http 7681
