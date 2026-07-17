@@ -10,22 +10,20 @@ jobs:
       - name: Descargar base
         uses: actions/checkout@v4
 
-      - name: Instalar Terminal Gotty y Cloudflared
+      - name: Instalar Terminal Nativa y Cloudflared
         run: |
           sudo apt-get update
-          # Descargamos Gotty (la terminal que no usa WebSockets obligatorios)
-          wget -q https://github.com
-          tar -xzf gotty_linux_amd64.tar.gz
-          chmod +x gotty
+          # Instalamos la terminal web nativa de Linux
+          sudo apt-get install -y shellinabox
           
-          # Descargamos el agente de Cloudflare
+          # Descargamos el agente de Cloudflare de forma robusta
           wget -q https://github.com
           chmod +x cloudflared-linux-amd64
 
       - name: Encender Terminal e Iniciar Tunel Camuflado
         run: |
-          # 1. Activamos Gotty en el puerto 8080 permitiendo escribir de forma libre (-w)
-          ./gotty -w -p 8080 bash &
+          # 1. Activamos la terminal de forma nativa en el puerto 4200 sin cifrado SSL interno para evitar errores
+          sudo shellinaboxd -b -p 4200 --disable-ssl
           
           # 2. Lanzamos el puente invisible de Cloudflare
-          ./cloudflared-linux-amd64 tunnel --url http://localhost:8080
+          ./cloudflared-linux-amd64 tunnel --url http://localhost:4200
