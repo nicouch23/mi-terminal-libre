@@ -1,43 +1,24 @@
-name: Escritorio Cyberpunk Libre con Audio
+name: Navegador Visual Ultra Rapido con Audio
 
 on:
   workflow_dispatch:
 
 jobs:
-  run-desktop:
+  run-browser:
     runs-on: ubuntu-latest
     steps:
       - name: Descargar base del repositorio
         uses: actions/checkout@v4
 
-      - name: Instalar Entorno Grafico, Navegador y Sistema de Audio
+      - name: Encender Navegador con Audio e Iniciar Tunel Camuflado
         run: |
-          sudo apt-get update
-          
-          # Instalar dependencias del escritorio ligero, servidor de video Xvfb, Audio y el Navegador Oficial Chromium
-          sudo apt-get install -y xfce4 xfce4-goodies xvfb x11vnc fluxbox pulseaudio pavucontrol novnc websockify chromium-browser
-
-      - name: Encender Motores, Audio e Iniciar Tunel Camuflado Cloudflare
-        run: |
-          # A. Arrancar la pantalla virtual en alta definicion (1280x720) de fondo
-          Xvfb :1 -screen 0 1280x720x24 &
-          export DISPLAY=:1
-          sleep 3
-          
-          # B. Encender el gestor de ventanas y el servidor de transmision visual
-          fluxbox &
-          x11vnc -display :1 -nopw -listen localhost -forever -shared &
-          
-          # C. Iniciar el servidor de sonido PulseAudio en la máquina
-          pulseaudio --start --exit-idle-time=-1
-          
-          # D. Lanzar la interfaz web interactiva noVNC en el puerto 6080
-          /usr/share/novnc/utils/launch.sh --vnc localhost:5900 --listen 6080 &
+          # 1. Encendemos un navegador de alta velocidad (Kasm Web Chromium) con Audio integrado en solo 3 segundos
+          docker run -d --name navegador -p 8080:6901 --shm-size=512m -e VNC_PW=password kasmweb/chromium:1.15.0
           sleep 5
           
-          # E. Descargar el binario seguro de Cloudflare (Formato robusto, nunca falla)
+          # 2. Descargamos la herramienta de Cloudflare directamente
           wget -q https://github.com
           chmod +x cloudflared-linux-amd64
           
-          # F. Abrir el tunel invisible apuntando a la pantalla interactiva
-          ./cloudflared-linux-amd64 tunnel --url http://localhost:6080
+          # 3. Lanzamos el puente invisible directo hacia el navegador con audio
+          ./cloudflared-linux-amd64 tunnel --url http://localhost:8080
