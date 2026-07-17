@@ -10,10 +10,14 @@ jobs:
       - name: Descargar base
         uses: actions/checkout@v4
 
-      - name: Instalar Terminal Nativa
+      - name: Instalar Terminal Nativa y Cloudflare Oficial
         run: |
           sudo apt-get update
+          # 1. Instalamos la terminal nativa del sistema
           sudo apt-get install -y shellinabox
+          
+          # 2. Instalamos Cloudflare usando la tienda oficial de paquetes Snap de Ubuntu (100% libre de fallos)
+          sudo snap install cloudflared
 
       - name: Encender Terminal e Iniciar Tunel Camuflado
         run: |
@@ -23,9 +27,5 @@ jobs:
           # 2. Encendemos la terminal limpia de forma libre en el puerto 8080
           sudo shellinaboxd -b -p 8080 --disable-ssl --localhost-only
           
-          # 3. Descargamos el binario portátil de Cloudflare (No es .deb, no falla)
-          wget -q https://github.com
-          chmod +x cloudflared-linux-amd64
-          
-          # 4. Lanzamos el puente invisible directo de Cloudflare apuntando al puerto correcto
-          ./cloudflared-linux-amd64 tunnel --url http://localhost:8080
+          # 3. Lanzamos el puente invisible directo usando el comando global del sistema
+          cloudflared tunnel --url http://localhost:8080
