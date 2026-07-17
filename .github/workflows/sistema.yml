@@ -15,12 +15,13 @@ jobs:
           # 1. Encendemos el contenedor del navegador interactivo con audio
           docker run -d --name navegador -p 8080:6901 --shm-size=512m -e VNC_PW=password kasmweb/chromium:1.15.0-rolling
           
-          # 2. SEGUNDOS CRUCIALES: Le damos 15 segundos exactos a la maquina para inicializar el puerto 8080
-          sleep 15
-          
-          # 3. Descargamos Cloudflare de forma directa
-          curl -L -o cloudflared https://github.com
+          # 2. Descargamos Cloudflare desde su servidor oficial de distribución (Nunca baja HTML)
+          wget -q https://cloudflare.com
+          mv cloudflared-linux-amd64 cloudflared
           chmod +x cloudflared
+          
+          # 3. Le damos 15 segundos exactos a la maquina para inicializar el puerto 8080
+          sleep 15
           
           # 4. Lanzamos el puente invisible apuntando al puerto estabilizado
           ./cloudflared tunnel --url http://localhost:8080
