@@ -1,15 +1,27 @@
-name: Terminal Remota en la Nube
+name: Terminal Invisible Anti Bloqueos
 
 on:
-  workflow_dispatch: # Esto nos da un botón manual para encenderla cuando queramos
+  workflow_dispatch:
 
 jobs:
-  maquina-virtual:
+  run-ssh:
     runs-on: ubuntu-latest
     steps:
-      - name: Descargar base del repositorio
-        uses: actions/checkout@v4
-
-      - name: Encender Tunel Seguro Interactiva
-        uses: mxschmitt/action-tmate@v3
-        timeout-minutes: 350 # La máquina se mantendrá viva hasta por 6 horas
+      - name: Instalar Terminal Web Integrada
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ttyd
+          # Arrancamos la terminal web en el puerto 7681
+          ttyd -p 7681 bash &
+          
+      - name: Instalar y Configurar Tunel ngrok
+        run: |
+          curl -s https://amazonaws.com | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null
+          echo "deb https://amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list
+          sudo apt-get update && sudo apt-get install ngrok
+          # AQUÍ PEGAS TU TOKEN (Reemplaza lo que está entre comillas)
+          ngrok config add-authtoken "TU_TOKEN_DE_NGROK_AQUI"
+          
+      - name: Abrir Enlace Libre Permanente
+        run: |
+          ngrok http 7681
