@@ -10,19 +10,22 @@ jobs:
       - name: Descargar base
         uses: actions/checkout@v4
 
-      - name: Instalar Terminal Web Ligera
+      - name: Instalar Terminal Gotty y Cloudflared
         run: |
           sudo apt-get update
-          sudo apt-get install -y ttyd
-
-      - name: Descargar y Ejecutar Tunel de Cloudflare
-        run: |
-          # 1. Activamos la terminal en segundo plano
-          ttyd -p 8080 bash &
+          # Descargamos Gotty (la terminal que no usa WebSockets obligatorios)
+          wget -q https://github.com
+          tar -xzf gotty_linux_amd64.tar.gz
+          chmod +x gotty
           
-          # 2. Descargamos el ejecutable directo sin instaladores pesados
-          wget -q https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64
+          # Descargamos el agente de Cloudflare
+          wget -q https://github.com
           chmod +x cloudflared-linux-amd64
+
+      - name: Encender Terminal e Iniciar Tunel Camuflado
+        run: |
+          # 1. Activamos Gotty en el puerto 8080 permitiendo escribir de forma libre (-w)
+          ./gotty -w -p 8080 bash &
           
-          # 3. Lanzamos el puente camuflado directo
+          # 2. Lanzamos el puente invisible de Cloudflare
           ./cloudflared-linux-amd64 tunnel --url http://localhost:8080
