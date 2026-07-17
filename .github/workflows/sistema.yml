@@ -1,0 +1,15 @@
+name: Terminal Remota en la Nube
+
+on:
+  workflow_dispatch: # Esto nos da un botón manual para encenderla cuando queramos
+
+jobs:
+  maquina-virtual:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar base del repositorio
+        uses: actions/checkout@v4
+
+      - name: Encender Tunel Seguro Interactiva
+        uses: mxschmitt/action-tmate@v3
+        timeout-minutes: 350 # La máquina se mantendrá viva hasta por 6 horas
